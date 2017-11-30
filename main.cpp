@@ -232,7 +232,7 @@ void Grafo<T>::inicializar() {
     this->itens.resize(this->ordem+1);
     this->matriz = new vector<float>[this->ordem+1];
 
-    for (int i = 0; i <= this->ordem; i++) { matriz[i].assign(this->ordem+1, 0); }
+    for (int i = 0; i <= this->ordem; i++) { matriz[i].assign(this->ordem+1, -1.0); }
 }
 
 template <typename T>
@@ -392,7 +392,7 @@ void lerBlocos(Grafo<Grafo<bool>> &cerebro) {
 vector<unsigned int> adjDeU(vector<float> aux) {
     vector<unsigned int> adjU;
     for (unsigned int i = 1; i < aux.size(); i++) {
-        if (aux[i] != 0.0) {
+        if (aux[i] >= 0.0) {
             adjU.push_back(i);
         }
     }
@@ -405,7 +405,6 @@ void Dijkstra(Grafo<T> grafo, vector<Vertice> &S,  int inicio, int fim) {
     vector<unsigned int> adjU;
     vector<float> *matriz = grafo.getMatriz();
     Heap prioridade;
-
     for (int i = 1; i <=grafo.getOrdem(); i++) {
         Q[i] = Vertice(INFINITO, NULO, i);
     }
@@ -422,11 +421,10 @@ void Dijkstra(Grafo<T> grafo, vector<Vertice> &S,  int inicio, int fim) {
         }
 
         adjU = adjDeU(matriz[u.getNumVertice()]);
-
         for (int x : adjU) {
             //int pos = prioridade.posNoHeap(x);
-            int pos = posNoHeap(Q, grafo.getOrdem(), x);
-            if (Q[pos].getDistancia() > u.getDistancia() + (matriz[u.getNumVertice()][Q[pos].getNumVertice()])) {
+            int pos = posNoHeap(Q, prioridade.getTamanhoHeap(), x);
+            if (pos != -1 && Q[pos].getDistancia() > u.getDistancia() + (matriz[u.getNumVertice()][Q[pos].getNumVertice()])) {
 
                 float distancia = u.getDistancia() + (matriz[u.getNumVertice()][Q[pos].getNumVertice()]);
                 Q[pos].setPredecessor(u.getNumVertice());
@@ -447,7 +445,7 @@ vector<Aresta> Kruskal(Grafo<T> grafo) {
 
     for (int i = 1; i <= grafo.getOrdem(); i++) {
         for (int j = 1; j <= grafo.getOrdem(); j++) {
-            if (j > i && matriz[i][j] != 0.0) {
+            if (j > i && matriz[i][j] >= 0.0) {
                 A.push_back(Aresta(i, j, matriz[i][j]));
             }
         }
@@ -485,12 +483,10 @@ int main() {
     fim = stoi(entradaSplit[1]);
 
     lerBlocos(cerebro);
-
     vector<Vertice> resultD;
     Dijkstra(cerebro, resultD, inicio, fim);
 
     //------------------------------------------------------------------------------------------------------------------
-
 
     vector<int> blocosV;
     int aux = fim;
@@ -503,7 +499,6 @@ int main() {
             }
         }
     }
-
     vector<Grafo<bool>> blocos;
     for (int x : blocosV) {
         Grafo<bool> bloco = cerebro.getItem(x);
@@ -525,7 +520,6 @@ int main() {
             saida += y.getPeso();
         }
     }
-
     cout << saida << endl;
     return 0;
 }
