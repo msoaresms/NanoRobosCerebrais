@@ -381,7 +381,6 @@ void Dijkstra(Grafo<T> grafo, vector<Vertice> &S,  int inicio, int fim) {
 
         adjU = adjDeU(matriz[u.getNumVertice()]);
         for (int x : adjU) {
-            //int pos = prioridade.posNoHeap(x);
             int pos = posNoHeap(Q, prioridade.getTamanhoHeap(), x);
             if (pos != -1 && Q[pos].getDistancia() > u.getDistancia() + (matriz[u.getNumVertice()][Q[pos].getNumVertice()])) {
 
@@ -445,40 +444,30 @@ int main() {
     vector<Vertice> resultD;
     Dijkstra(cerebro, resultD, inicio, fim);
 
-    //------------------------------------------------------------------------------------------------------------------
-
-    vector<int> blocosV;
+    float saida = 0.0;
     int aux = fim;
     while (aux != NULO) {
-        for (Vertice x : resultD) {
-            if (aux == x.getNumVertice()) {
-                blocosV.push_back(x.getNumVertice());
-                aux = x.getPredecessor();
+        for (Vertice vertAtual : resultD) {
+
+            if (aux == vertAtual.getNumVertice()) {
+                Grafo<bool> bloco = cerebro.getItem(vertAtual.getNumVertice());
+                for (int i = 1; i <= bloco.getOrdem(); i++) {
+                    bool doente = bloco.getItem(i);
+
+                    if (doente) {
+                        vector<Aresta> resultKruskal = Kruskal(bloco);
+                        for (Aresta aresta : resultKruskal) {
+                            saida += aresta.getPeso();
+                        }
+                        break;
+                    }
+                }
+                aux = vertAtual.getPredecessor();
                 break;
             }
         }
     }
-    vector<Grafo<bool>> blocos;
-    for (int x : blocosV) {
-        Grafo<bool> bloco = cerebro.getItem(x);
-        for (int i = 1; i <= bloco.getOrdem(); i++) {
-            bool aux = bloco.getItem(i);
-            if (aux) {
-                blocos.push_back(bloco);
-                break;
-            }
-        }
-    }
 
-    float saida = 0.0;
-
-    for (Grafo<bool> x : blocos) {
-        vector<Aresta> resultKruskal = Kruskal(x);
-
-        for (Aresta y : resultKruskal) {
-            saida += y.getPeso();
-        }
-    }
     cout << saida << endl;
     return 0;
 }
