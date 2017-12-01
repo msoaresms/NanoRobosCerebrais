@@ -55,29 +55,18 @@ public:
 class Heap {
 private:
     int tamanhoHeap, tamArray;
-    int * posParaVert, * vertParaPos;
 
     int esquerda(int i) { return i * 2; }
-
     int direita(int i) { return ((i * 2) + 1); }
-
     int pai(int i) { return floor(i / 2); }
-
     void troca(Vertice *, int, int);
 
 public:
     int getTamanhoHeap();
-
     void heapfica(Vertice *, int);
-
     void constroiHeap(Vertice *, int);
-
     Vertice extrairMenor(Vertice *);
-
     void alterarChave(Vertice *, int, float);
-
-    int posNoHeap(int);
-
 };
 //----------------------------------------------------------------------------------------------------------------------
 class Aresta {
@@ -96,7 +85,6 @@ public:
     int getU() { return this->u; }
     int getV() { return this->v; }
     float getPeso() { return this->peso; }
-
 };
 //----------------------------------------------------------------------------------------------------------------------
 template <class T>
@@ -125,9 +113,7 @@ public:
 };
 //----------------------------------------------------------------------------------------------------------------------
 int UnionFind::procurar(int p) {
-    while (p != this->conjuntos[p]) {
-        p = this->conjuntos[p];
-    }
+    while (p != this->conjuntos[p]) { p = this->conjuntos[p]; }
     return p;
 }
 
@@ -151,14 +137,6 @@ void Heap::troca(Vertice *v, int i, int j) {
     Vertice vAux = v[i];
     v[i] = v[j];
     v[j] = vAux;
-
-    int aux = this->posParaVert[i];
-    this->posParaVert[i] = this->posParaVert[j];
-    this->posParaVert[j] = aux;
-
-    aux = this->vertParaPos[this->posParaVert[i]];
-    this->vertParaPos[this->posParaVert[i]] = this->vertParaPos[this->posParaVert[j]];
-    this->vertParaPos[this->posParaVert[j]] = aux;
 }
 
 void Heap::heapfica(Vertice *v, int i) {
@@ -180,20 +158,11 @@ void Heap::heapfica(Vertice *v, int i) {
         this->troca(v, i, menor);
         this->heapfica(v, menor);
     }
-
 }
 
 void Heap::constroiHeap(Vertice *v, int pTamArray) {
     this->tamArray = pTamArray;
     this->tamanhoHeap = this->tamArray;
-
-    this->vertParaPos = new int[this->tamArray+1];
-    this->posParaVert = new int[this->tamArray+1];
-
-    for (int i = 0; i <= this->tamArray; i++) {
-        this->vertParaPos[i] = i;
-        this->posParaVert[i] = i;
-    }
 
     for (int i = floor(this->tamArray/2); i > 0; i--) {
         this->heapfica(v, i);
@@ -201,18 +170,10 @@ void Heap::constroiHeap(Vertice *v, int pTamArray) {
 }
 
 Vertice Heap::extrairMenor(Vertice *v) {
-
     Vertice menor = v[1];
     v[1] = v[this->tamanhoHeap];
-
-    int vert = this->posParaVert[this->tamanhoHeap];
-    this->vertParaPos[vert] = 1;
-    this->posParaVert[1] = vert;
-
     this->tamanhoHeap--;
-
     this->heapfica(v, 1);
-
     return menor;
 }
 
@@ -224,8 +185,6 @@ void Heap::alterarChave(Vertice *v, int vert, float peso) {
         vert = pai(vert);
     }
 }
-
-int Heap::posNoHeap(int vertice) { return this->vertParaPos[vertice]; }
 //----------------------------------------------------------------------------------------------------------------------
 template <typename T>
 void Grafo<T>::inicializar() {
@@ -248,15 +207,6 @@ void Grafo<T>::inserirItem(T pItem, int pVertice) { this->itens[pVertice] = pIte
 template <typename T>
 T Grafo<T>::getItem(int n) { return this->itens[n]; }
 //----------------------------------------------------------------------------------------------------------------------
-int posNoHeap(Vertice *v, int tam, int n) {
-    for (int i = 1; i <= tam; i++) {
-        if (n == v[i].getNumVertice()) {
-            return i;
-        }
-    }
-    return -1;
-}
-
 int particao(vector<Aresta> &v, int p, int r){
     Aresta x = v[p];
     Aresta tmp = v[r+1];
@@ -298,6 +248,15 @@ void quickSort(vector<Aresta> &v) {
     quickSort(v, 0, v.size()-1);
 }
 
+int posNoHeap(Vertice *v, int tam, int n) {
+    for (int i = 1; i <= tam; i++) {
+        if (n == v[i].getNumVertice()) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 Grafo<Grafo<bool>> lerCerebro() {
     string entrada;
     vector<string> entradaSplit;
@@ -312,7 +271,7 @@ Grafo<Grafo<bool>> lerCerebro() {
 
     Grafo<Grafo<bool>> cerebro(ordemCerebro);
 
-    for (int i = 1; i <= tamanhoCerebro; i++){
+    for (int i = 1; i <= tamanhoCerebro; i++) {
         entradaSplit.clear();
         for (int j = 0; j < 3; j++) {
             cin >> entrada;
