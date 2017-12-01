@@ -412,12 +412,12 @@ vector<Aresta> Kruskal(Grafo<T> grafo) {
     quickSort(A);
 
     while (A.size() > 0) {
-        Aresta aux = A[0];
+        Aresta aresta = A[0];
         A.erase(A.begin()+0);
 
-        if (!conjuntos.conectados(aux.getU(), aux.getV())) {
-            saida.push_back(aux);
-            conjuntos.uniao(aux.getU(), aux.getV());
+        if (!conjuntos.conectados(aresta.getU(), aresta.getV())) {
+            saida.push_back(aresta);
+            conjuntos.uniao(aresta.getU(), aresta.getV());
         }
     }
 
@@ -441,15 +441,16 @@ int main() {
     fim = stoi(entradaSplit[1]);
 
     lerBlocos(cerebro);
+
     vector<Vertice> resultD;
     Dijkstra(cerebro, resultD, inicio, fim);
 
     float saida = 0.0;
-    int aux = fim;
-    while (aux != NULO) {
+    int vertice = fim;
+    while (vertice != NULO) {
         for (Vertice vertAtual : resultD) {
 
-            if (aux == vertAtual.getNumVertice()) {
+            if (vertice == vertAtual.getNumVertice()) {
                 Grafo<bool> bloco = cerebro.getItem(vertAtual.getNumVertice());
                 for (int i = 1; i <= bloco.getOrdem(); i++) {
                     bool doente = bloco.getItem(i);
@@ -462,7 +463,7 @@ int main() {
                         break;
                     }
                 }
-                aux = vertAtual.getPredecessor();
+                vertice = vertAtual.getPredecessor();
                 break;
             }
         }
